@@ -6,6 +6,12 @@ module.exports = {
     allTrips: async (root, data, {mongo: {Trips}}) => {
       return await Trips.find({}).toArray();
     },
+    allAgencies: async (root, data, {mongo: {Agencies}}) => {
+      return await Agencies.find({}).toArray();
+    },
+    allSessions: async (root, data, {mongo: {Sessions}}) => {
+      return await Sessions.find({}).toArray();
+    },
   },
   Mutation: {
     createUser: async (root, data, {mongo: {Users}}) => {
@@ -25,7 +31,7 @@ module.exports = {
       }
     },
     createTrip: async (root, data, {mongo: {Trips}, user}) => {
-      const newTrip = Object.assign({agent: user && user._id}, data.tripInputData)
+      const newTrip = Object.assign({agent: user && user._id}, data.tripInputData) // we user authenticated user to be used as agent
       const response = await Trips.insert(newTrip);
       return Object.assign({id: response.insertedIds[0]}, newTrip);
     },
@@ -34,6 +40,9 @@ module.exports = {
 
   User: {
     id: root => root._id || root.id,
+    agency: async ({agency}, data, {mongo: {Agencies}}) => {
+      return await Agencies.findOne({_id: agency});
+    },
   },
 
   Trip: {
@@ -41,5 +50,13 @@ module.exports = {
     agent: async ({agent}, data, {mongo: {Users}}) => {
       return await Users.findOne({_id: agent});
     },
+  },
+
+  Agency: {
+    id: root => root._id || root.id,
+  },
+
+  Session: {
+    id: root => root._id || root.id,
   },
 };

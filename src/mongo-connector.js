@@ -8,6 +8,8 @@ module.exports = async () => {
   const db = await MongoClient.connect(MONGO_URL);
   return {
     Users: db.collection('users'),
-    Trips: db.collection('trips')
+    Trips: db.collection('trips'),
+    Agencies: db.collection('agencies'),
+    Sessions: db.collection('sessions')
   };
 }

@@ -16,6 +16,14 @@ const typeDefs = `
     mobile: String
     title: String
     deviceId: String
+    agency: Agency!
+    agency_name: String
+    messengerTrips: [Trip]
+  }
+  
+  type Session {
+    id: ID!
+    user: User!
   }
   
   input AuthProviderSignupData {
@@ -24,11 +32,25 @@ const typeDefs = `
   }
     
   type Location {
-    id: ID!
     city: String
     country: String
     airport: String
     date: String
+  }
+  
+  type Message {
+    author: User
+    content: String
+    sent: String
+  }
+  
+  type Attachment {
+    file: String
+    filename: String
+    documentType: String
+    lastSeenAt: String
+    createdAt: String
+    updatedAt: String
   }
   
   type Trip {
@@ -43,6 +65,17 @@ const typeDefs = `
     departure: Location
     destination: Location
     agent: User!
+    users: [User!]!
+    messages: [Message]
+    attachments: [Attachment]
+  }
+  
+  type Agency {
+    id: ID!
+    name: String!
+    logo_url: String!
+    mobile_color: String
+    mobile_font: String
   }
   
   input LocationInputData {
@@ -72,6 +105,8 @@ const typeDefs = `
   type Query {
     allUsers: [User!]!
     allTrips: [Trip!]!
+    allAgencies: [Agency!]!
+    allSessions: [Session!]!
   }
   
   type Mutation {
