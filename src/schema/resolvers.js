@@ -3,8 +3,16 @@ module.exports = {
     allUsers: async (root, data, {mongo: {Users}}) => {
       return await Users.find({}).toArray();
     },
-    allTrips: async (root, data, {mongo: {Trips}}) => {
-      return await Trips.find({}).toArray();
+    allTrips: async (root, data, {mongo: {Trips}, user}) => {
+
+      console.log("user : " + JSON.stringify(user));
+      if(user.role === 'agent') {
+        return await Trips.find({agent: user.id}).sort({updatedAt: -1}).toArray();
+      } else if (user.role === 'user') {
+        return await Trips.find({users: { "$in" : [user.id]}}).sort({updatedAt: -1}).toArray();
+      } else {
+        return await Trips.find({}).sort({updatedAt: -1}).toArray();
+      }
     },
     allAgencies: async (root, data, {mongo: {Agencies}}) => {
       return await Agencies.find({}).toArray();
