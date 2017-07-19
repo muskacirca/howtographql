@@ -6,13 +6,15 @@ module.exports = {
     allTrips: async (root, data, {mongo: {Trips}, user}) => {
 
       console.log("user : " + JSON.stringify(user));
-      if(user.role === 'agent') {
-        return await Trips.find({agent: user.id}).sort({updatedAt: -1}).toArray();
-      } else if (user.role === 'user') {
-        return await Trips.find({users: { "$in" : [user.id]}}).sort({updatedAt: -1}).toArray();
-      } else {
+      // if(user.role === 'agent') {
+      //   return await Trips.find({agent: user.id}).sort({updatedAt: -1}).toArray();
+      // } else if (user.role === 'user') {
+      //   return await Trips.find({users: { "$in" : [user.id]}}).sort({updatedAt: -1}).toArray();
+      // } else if (user.role === 'admin') {
         return await Trips.find({}).sort({updatedAt: -1}).toArray();
-      }
+      // }
+
+      // return null;
     },
     allAgencies: async (root, data, {mongo: {Agencies}}) => {
       return await Agencies.find({}).toArray();
@@ -39,7 +41,7 @@ module.exports = {
       }
     },
     createTrip: async (root, data, {mongo: {Trips}, user}) => {
-      const newTrip = Object.assign({agent: user && user._id}, data.tripInputData) // we user authenticated user to be used as agent
+      const newTrip = Object.assign({agent: user && user._id}, data.tripInputData) //FIXME we use authenticated user to be used as agent
       const response = await Trips.insert(newTrip);
       return Object.assign({id: response.insertedIds[0]}, newTrip);
     },
@@ -58,6 +60,11 @@ module.exports = {
     agent: async ({agent}, data, {mongo: {Users}}) => {
       return await Users.findOne({_id: agent});
     },
+    users: async ({users}, data, {mongo: {Users}}) => {
+      return users
+        ? await Users.find({_id: { "$in" : users}}).toArray()
+        : null
+    }
   },
 
   Agency: {

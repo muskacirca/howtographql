@@ -25,11 +25,6 @@ const typeDefs = `
     id: ID!
     user: User!
   }
-  
-  input AuthProviderSignupData {
-    email: String!
-    password: String!
-  }
     
   type Location {
     city: String
@@ -65,7 +60,7 @@ const typeDefs = `
     departure: Location
     destination: Location
     agent: User!
-    users: [User!]!
+    users: [User]
     messages: [Message]
     attachments: [Attachment]
   }
@@ -97,16 +92,21 @@ const typeDefs = `
     destination: LocationInputData
   }
   
+  input AuthProviderSignupData {
+    email: String!
+    password: String!
+  }
+  
   type SignInPayload {
     token: String
     user: User
   }
   
   type Query {
-    allUsers: [User!]!
-    allTrips: [Trip!]!
-    allAgencies: [Agency!]!
-    allSessions: [Session!]!
+    allUsers: [User!]
+    allTrips: [Trip!]
+    allAgencies: [Agency!]
+    allSessions: [Session!]
   }
   
   type Mutation {
