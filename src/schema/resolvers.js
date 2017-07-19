@@ -63,9 +63,9 @@ module.exports = {
     agent: async ({agent}, data, {mongo: {Users}}) => {
       return await Users.findOne({_id: agent});
     },
-    users: async ({users}, data, {mongo: {Users}}) => {
+    users: async ({users}, data, {dataloaders: {userLoader}}) => {
       return users
-        ? await Users.find({_id: { "$in" : users}}).toArray()
+        ? await userLoader.load(users).toArray()
         : null
     }
   },
