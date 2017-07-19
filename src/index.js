@@ -24,7 +24,7 @@ const start = async () => {
 
   app.use('/graphiql', graphiqlExpress({
     endpointURL: '/graphql',
-    passHeader: `'Authorization': 'bearer token-graphql@test.com'`,
+    passHeader: `'Authorization': 'bearer token-admin'`,
   }));
 
 
