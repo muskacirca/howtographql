@@ -51,21 +51,24 @@ module.exports = {
     agency: async ({agency}, data, {mongo: {Agencies}}) => {
       return await Agencies.findOne({_id: agency});
     },
-    messengerTrips: async ({messengerTrips}, data, {mongo: {Trips}}) => {
-      return messengerTrips
-        ? await Trips.find({_id: { "$in" : messengerTrips}}).toArray()
+    messengerTrips: async ({messengerTrips}, data, {dataloaders: {tripLoader}}) => {
+      let zzzz =  messengerTrips
+        ? [await tripLoader.load(messengerTrips)]
         : null
+
+      console.log("zzzz : " + JSON.stringify(zzzz));
+      return zzzz
     }
   },
 
   Trip: {
     id: root => root._id || root.id,
-    agent: async ({agent}, data, {mongo: {Users}}) => {
-      return await Users.findOne({_id: agent});
+    agent: async ({agent}, data, {dataloaders: {userLoader}}) => {
+      return await userLoader.load(agent);
     },
     users: async ({users}, data, {dataloaders: {userLoader}}) => {
       return users
-        ? await userLoader.load(users).toArray()
+        ? [await userLoader.load(users)]
         : null
     }
   },
