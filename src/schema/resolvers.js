@@ -52,12 +52,12 @@ module.exports = {
       return await Agencies.findOne({_id: agency});
     },
     messengerTrips: async ({messengerTrips}, data, {dataloaders: {tripLoader}}) => {
-      let zzzz =  messengerTrips
-        ? [await tripLoader.load(messengerTrips)]
+      let aaa = messengerTrips
+        ? tripLoader.load(messengerTrips)
         : null
 
-      console.log("zzzz : " + JSON.stringify(zzzz));
-      return zzzz
+      console.log("aaa: " + JSON.stringify(aaa))
+      return aaa;
     }
   },
 

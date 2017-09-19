@@ -6,11 +6,13 @@ async function batchUsers (Users, keys) {
 }
 
 async function batchTrips (Trips, keys) {
-  // let $in = _.flatten(keys);
-  console.log("key:" + JSON.stringify(keys))
-  let newVar = await Trips.find({_id: {$in: keys}}).toArray();
-  console.log("newVar:" + JSON.stringify(newVar))
-  return newVar;
+  console.log("keys : " + JSON.stringify(keys))
+  let map = keys.map(async k => {
+    console.log("k : " + JSON.stringify(k))
+    return await Trips.find({_id: {$in: _.flatten(k)}}).toArray();
+  });
+  console.log("map : " + JSON.stringify(map))
+  return map
 }
 
 module.exports = ({Users, Trips}) => ({
@@ -21,13 +23,7 @@ module.exports = ({Users, Trips}) => ({
   ),
 
   tripLoader: new DataLoader(
-    keys => {
-
-      console.log("keys:" + JSON.stringify(keys))
-      let uniq = _.flatten(keys)
-
-     return batchTrips(Trips, _.uniq(uniq)),
-        {cacheKeyFn: key => key.toString()}
-    }
+    keys => batchTrips(Trips, keys),
+    {cacheKeyFn: key => key.toString()}
   ),
 });
