@@ -40,6 +40,7 @@ const typeDefs = `
   }
   
   type Attachment {
+    id: ID!
     file: String
     filename: String
     documentType: String

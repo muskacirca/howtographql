@@ -79,4 +79,8 @@ module.exports = {
   Session: {
     id: root => root._id || root.id,
   },
+
+  Attachment: {
+    id: root => root._id || root.id
+  }
 };
