@@ -73,8 +73,18 @@ module.exports = {
       return users
         ? [await userLoader.load(users)]
         : null
-    }
+    },
+    // messages: () => {
+    //   console.log("MESSAGGGESSSS");
+    // }
   },
+
+  // Message: {
+  //   author: async ({author}, data, {dataloaders: {userLoader}}) => {
+  //     console.log("author : " + JSON.stringify(author));
+  //     return await userLoader.load(author)
+  //   }
+  // },
 
   Agency: {
     id: root => root._id || root.id,
