@@ -93,6 +93,13 @@ const typeDefs = `
     destination: LocationInputData
   }
   
+  input AgencyInputData {
+    name: String!
+    logo_url: String!
+    mobile_color: String
+    mobile_font: String
+  }
+  
   input AuthProviderSignupData {
     email: String!
     password: String!
@@ -114,6 +121,7 @@ const typeDefs = `
     createUser(authProvider: AuthProviderSignupData!): User
     signIn(signInData: AuthProviderSignupData!): SignInPayload
     createTrip(tripInputData: TripInputData!): Trip
+    createAgency(agencyInputData: AgencyInputData): Agency
   }
 `;
 

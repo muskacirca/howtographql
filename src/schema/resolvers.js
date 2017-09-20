@@ -43,6 +43,10 @@ module.exports = {
       const response = await Trips.insert(newTrip);
       return Object.assign({id: response.insertedIds[0]}, newTrip);
     },
+    createAgency: async (root, data, {mongo: {Agencies}}) => {
+      const response = await Agencies.insert(data.agencyInputData);
+      return Object.assign({id: response.insertedIds[0]}, data.agencyInputData);
+    }
 
   },
 
