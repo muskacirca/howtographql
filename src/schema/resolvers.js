@@ -48,16 +48,15 @@ module.exports = {
 
   User: {
     id: root => root._id || root.id,
-    agency: async ({agency}, data, {mongo: {Agencies}}) => {
-      return await Agencies.findOne({_id: agency});
+    agency: async ({agency}, data, {dataloaders: {agencyLoader}}) => {
+      return agency
+        ? agencyLoader.load(agency)
+        : null
     },
     messengerTrips: async ({messengerTrips}, data, {dataloaders: {tripLoader}}) => {
-      let aaa = messengerTrips
+      return messengerTrips
         ? tripLoader.load(messengerTrips)
         : null
-
-      console.log("aaa: " + JSON.stringify(aaa))
-      return aaa;
     }
   },
 

@@ -5,17 +5,19 @@ async function batchUsers (Users, keys) {
   return await Users.find({_id: {$in: _.flatten(keys)}}).toArray();
 }
 
-async function batchTrips (Trips, keys) {
-  console.log("keys : " + JSON.stringify(keys))
-  let map = keys.map(async k => {
-    console.log("k : " + JSON.stringify(k))
-    return await Trips.find({_id: {$in: _.flatten(k)}}).toArray();
-  });
-  console.log("map : " + JSON.stringify(map))
-  return map
+async function batchAgencies (Agencies, keys) {
+
+  console.log("keys : " + keys)
+  return await Agencies.find({_id: {$in: keys}}).toArray();
 }
 
-module.exports = ({Users, Trips}) => ({
+async function batchTrips (Trips, keys) {
+  return keys.map(async k => {
+    return await Trips.find({_id: {$in: _.flatten(k)}}).toArray();
+  });
+}
+
+module.exports = ({Users, Trips, Agencies}) => ({
 
   userLoader: new DataLoader(
     keys => batchUsers(Users, keys),
@@ -26,4 +28,9 @@ module.exports = ({Users, Trips}) => ({
     keys => batchTrips(Trips, keys),
     {cacheKeyFn: key => key.toString()}
   ),
+
+  agencyLoader: new DataLoader(
+    keys => batchAgencies(Agencies, keys),
+    {cacheKeyFn: key => key.toString()}
+  )
 });
