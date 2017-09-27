@@ -120,9 +120,12 @@ const typeDefs = `
   
   type Mutation {
     createUser(authProvider: AuthProviderSignupData!): User
+    deleteUser(userId: String!): Int
     signIn(signInData: AuthProviderSignupData!): SignInPayload
     createTrip(tripInputData: TripInputData!): Trip
+    deleteTrip(tripId: String!): Int
     createAgency(agencyInputData: AgencyInputData): Agency
+    deleteAgency(agencyId: String!): Int
   }
 `;
 

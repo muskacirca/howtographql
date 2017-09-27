@@ -21,6 +21,7 @@ module.exports = {
       return await Sessions.find({}).toArray();
     },
   },
+
   Mutation: {
     createUser: async (root, data, {mongo: {Users}}) => {
 
@@ -31,6 +32,9 @@ module.exports = {
 
       const response = await Users.insert(newUser);
       return Object.assign({id: response.insertedIds[0]}, newUser);
+    },
+    deleteUser: async (root, data, {mongo: {Users}}) => {
+      return await Users.findOne({_id: data.userId}).remove().exec()
     },
     signIn: async(root, data, {mongo: {Users}}) => {
       const user = await Users.findOne({email: data.signInData.email});
@@ -43,11 +47,17 @@ module.exports = {
       const response = await Trips.insert(newTrip);
       return Object.assign({id: response.insertedIds[0]}, newTrip);
     },
+    deleteTrip: async (root, data, {mongo: {Trips}}) => {
+      console.log("deleting trip");
+      return await Trips.deleteOne({_id: data.tripId})
+    },
     createAgency: async (root, data, {mongo: {Agencies}}) => {
       const response = await Agencies.insert(data.agencyInputData);
       return Object.assign({id: response.insertedIds[0]}, data.agencyInputData);
-    }
-
+    },
+    deleteAgency: async (root, data, {mongo: {Agencies}}) => {
+      return await Agencies.findOne({_id: data.agencyId}).remove().exec()
+    },
   },
 
   User: {
@@ -73,21 +83,12 @@ module.exports = {
       return users
         ? await userLoader.loadMany(users)
         : null
-      // return users
-      //   ? await Users.find({_id: { "$in" : users}}).toArray()
-      //   : null
     },
-    // messages: () => {
-    //   console.log("MESSAGGGESSSS");
-    // }
   },
 
   Message: {
     author: async ({author}, data, {dataloaders: {userLoader}}) => {
       return author ? await userLoader.load(author) : null
-      // return author
-      //   ? await Users.findOne({_id: author})
-      //   : null
     }
   },
 
