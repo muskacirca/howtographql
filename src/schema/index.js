@@ -69,6 +69,7 @@ const typeDefs = `
   type Agency {
     id: ID!
     name: String!
+    identifier: String!
     logo_url: String!
     mobile_color: String
     mobile_font: String

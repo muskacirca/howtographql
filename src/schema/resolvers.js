@@ -59,7 +59,7 @@ module.exports = {
     },
     messengerTrips: async ({messengerTrips}, data, {dataloaders: {tripLoader}}) => {
       return messengerTrips
-        ? tripLoader.loadMany(messengerTrips) //FIXME use loadMany ?
+        ? tripLoader.loadMany(messengerTrips)
         : null
     }
   },
@@ -83,8 +83,8 @@ module.exports = {
   },
 
   Message: {
-    author: async ({author}, data, {dataloaders: {authorLoader}}) => {
-      return author ? await authorLoader.load(author) : null
+    author: async ({author}, data, {dataloaders: {userLoader}}) => {
+      return author ? await userLoader.load(author) : null
       // return author
       //   ? await Users.findOne({_id: author})
       //   : null
@@ -97,6 +97,11 @@ module.exports = {
 
   Session: {
     id: root => root._id || root.id,
+    user: async ({user}, data, {dataloaders: {userLoader}}) => {
+      return user
+        ? userLoader.load(user)
+        : null
+    },
   },
 
   Attachment: {
