@@ -59,7 +59,7 @@ module.exports = {
     },
     messengerTrips: async ({messengerTrips}, data, {dataloaders: {tripLoader}}) => {
       return messengerTrips
-        ? tripLoader.load(messengerTrips) //FIXME use loadMany ?
+        ? tripLoader.loadMany(messengerTrips) //FIXME use loadMany ?
         : null
     }
   },
@@ -84,7 +84,6 @@ module.exports = {
 
   Message: {
     author: async ({author}, data, {dataloaders: {authorLoader}}) => {
-      console.log("author : " + JSON.stringify(author));
       return author ? await authorLoader.load(author) : null
       // return author
       //   ? await Users.findOne({_id: author})

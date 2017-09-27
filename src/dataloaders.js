@@ -1,21 +1,21 @@
 const DataLoader = require('dataloader');
 const _ = require('underscore')
 
-async function batchUsers (Users, keys) {
-
-  const newVar = await Users.find({_id: {$in: keys}}).toArray();
-  return keys.map(k => {
-    let filter = _.find(newVar, n => JSON.stringify(n._id) === JSON.stringify(k))
-    return filter ? filter : null;
-  });
-}
-
-async function batchAuthors(Users, keys) {
-  let newVar = await Users.find({_id: {$in: _.flatten(keys)}}).toArray();
+function mapValuesAccordingToKeys(keys, newVar) {
   return keys.map(k => {
     let filter = _.find(newVar, n => JSON.stringify(n._id) === JSON.stringify(k))
     return filter ? filter : null;
   })
+}
+
+async function batchUsers (Users, keys) {
+  const newVar = await Users.find({_id: {$in: keys}}).toArray();
+  return mapValuesAccordingToKeys(keys, newVar)
+}
+
+async function batchAuthors(Users, keys) {
+  let newVar = await Users.find({_id: {$in: _.flatten(keys)}}).toArray();
+  return mapValuesAccordingToKeys(keys, newVar);
 }
 
 async function batchAgencies (Agencies, keys) {
@@ -23,9 +23,8 @@ async function batchAgencies (Agencies, keys) {
 }
 
 async function batchTrips (Trips, keys) {
-  return keys.map(async k => {
-    return await Trips.find({_id: {$in: _.flatten(k)}}).toArray();
-  });
+  let trips = await Trips.find({_id: {$in: keys}}).toArray();
+  return mapValuesAccordingToKeys(keys, trips)
 }
 
 module.exports = ({Users, Trips, Agencies}) => ({
