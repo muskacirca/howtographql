@@ -1,9 +1,9 @@
 const DataLoader = require('dataloader');
 const _ = require('underscore')
 
-function mapValuesAccordingToKeys(keys, newVar) {
+function mapValuesAccordingToKeys(keys, values) {
   return keys.map(k => {
-    let filter = _.find(newVar, n => JSON.stringify(n._id) === JSON.stringify(k))
+    let filter = _.find(values, v => JSON.stringify(v._id) === JSON.stringify(k))
     return filter ? filter : null;
   })
 }
