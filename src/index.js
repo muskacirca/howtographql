@@ -29,11 +29,11 @@ const start = async () => {
 
   app.use('/graphiql', graphiqlExpress({
     endpointURL: '/graphql',
-    passHeader: `'Authorization': 'bearer token-admin'`,
+    passHeader: `'Authorization': 'bearer token-muskacirca@gmail.com'`,
   }));
 
 
-  const PORT = 3000;
+  const PORT = 3001;
   app.listen(PORT, () => {
     console.log(`Hackernews GraphQL server running on port ${PORT}.`)
   });

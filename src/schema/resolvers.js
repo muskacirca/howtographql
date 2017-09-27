@@ -69,9 +69,12 @@ module.exports = {
     agent: async ({agent}, data, {dataloaders: {userLoader}}) => {
       return await userLoader.load(agent);
     },
-    users: async ({users}, data, {dataloaders: {userLoader}}) => {
+    users: async ({users}, data, {mongo: {Users}}) => {
+      // return users
+      //   ? [await userLoader.load(users)]
+      //   : null
       return users
-        ? [await userLoader.load(users)]
+        ? await Users.find({_id: { "$in" : users}}).toArray()
         : null
     },
     // messages: () => {
@@ -79,12 +82,15 @@ module.exports = {
     // }
   },
 
-  // Message: {
-  //   author: async ({author}, data, {dataloaders: {userLoader}}) => {
-  //     console.log("author : " + JSON.stringify(author));
-  //     return await userLoader.load(author)
-  //   }
-  // },
+  Message: {
+    author: async ({author}, data, {mongo: {Users}}) => {
+      console.log("author : " + JSON.stringify(author));
+      // return author ? await authorLoader.load(author) : null
+      return author
+        ? await Users.findOne({_id: author})
+        : null
+    }
+  },
 
   Agency: {
     id: root => root._id || root.id,
