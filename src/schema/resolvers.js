@@ -59,7 +59,7 @@ module.exports = {
     },
     messengerTrips: async ({messengerTrips}, data, {dataloaders: {tripLoader}}) => {
       return messengerTrips
-        ? tripLoader.load(messengerTrips)
+        ? tripLoader.load(messengerTrips) //FIXME use loadMany ?
         : null
     }
   },
@@ -69,13 +69,13 @@ module.exports = {
     agent: async ({agent}, data, {dataloaders: {userLoader}}) => {
       return await userLoader.load(agent);
     },
-    users: async ({users}, data, {mongo: {Users}}) => {
-      // return users
-      //   ? [await userLoader.load(users)]
-      //   : null
+    users: async ({users}, data, {dataloaders: {userLoader}}) => {
       return users
-        ? await Users.find({_id: { "$in" : users}}).toArray()
+        ? await userLoader.loadMany(users)
         : null
+      // return users
+      //   ? await Users.find({_id: { "$in" : users}}).toArray()
+      //   : null
     },
     // messages: () => {
     //   console.log("MESSAGGGESSSS");
@@ -83,12 +83,12 @@ module.exports = {
   },
 
   Message: {
-    author: async ({author}, data, {mongo: {Users}}) => {
+    author: async ({author}, data, {dataloaders: {authorLoader}}) => {
       console.log("author : " + JSON.stringify(author));
-      // return author ? await authorLoader.load(author) : null
-      return author
-        ? await Users.findOne({_id: author})
-        : null
+      return author ? await authorLoader.load(author) : null
+      // return author
+      //   ? await Users.findOne({_id: author})
+      //   : null
     }
   },
 

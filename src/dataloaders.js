@@ -3,18 +3,19 @@ const _ = require('underscore')
 
 async function batchUsers (Users, keys) {
 
-  console.log("keys : " + JSON.stringify(keys))
-  return await keys.map(async k => {
-    console.log("k : " + JSON.stringify(k))
-    return await Users.find({_id: {$in: _.flatten(k)}}).toArray();
-  })
+  const newVar = await Users.find({_id: {$in: keys}}).toArray();
+  return keys.map(k => {
+    let filter = _.find(newVar, n => JSON.stringify(n._id) === JSON.stringify(k))
+    return filter ? filter : null;
+  });
 }
 
 async function batchAuthors(Users, keys) {
-  console.log("keys : " + JSON.stringify(keys))
   let newVar = await Users.find({_id: {$in: _.flatten(keys)}}).toArray();
-  console.log("newVar : " + JSON.stringify(newVar))
-  return newVar;
+  return keys.map(k => {
+    let filter = _.find(newVar, n => JSON.stringify(n._id) === JSON.stringify(k))
+    return filter ? filter : null;
+  })
 }
 
 async function batchAgencies (Agencies, keys) {
@@ -31,7 +32,7 @@ module.exports = ({Users, Trips, Agencies}) => ({
 
   userLoader: new DataLoader(keys => {
       return batchUsers(Users, keys)
-    },{cache: false}
+    },{cacheKeyFn: key => key.toString()}
   ),
 
   tripLoader: new DataLoader(
@@ -46,6 +47,6 @@ module.exports = ({Users, Trips, Agencies}) => ({
 
   authorLoader: new DataLoader(
     keys => batchAuthors(Users, keys),
-    {cache: false}
+    {cacheKeyFn: key => key.toString()}
   )
 });
